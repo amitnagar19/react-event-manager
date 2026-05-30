@@ -5,6 +5,7 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
+    getPaginationRowModel,
     getSortedRowModel,
     type SortingState,
     useReactTable
@@ -12,7 +13,11 @@ import {
 import type { DataGridProps } from './types.ts';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 
-function DataGrid<T extends object>({ columns: columnConfigs, data }: DataGridProps<T>) {
+function DataGrid<T extends object>({
+    columns: columnConfigs,
+    data,
+    pageSize = 10,
+}: DataGridProps<T>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const columns = useMemo<ColumnDef<T>[]>(
@@ -37,6 +42,8 @@ function DataGrid<T extends object>({ columns: columnConfigs, data }: DataGridPr
         },
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
+        getPaginationRowModel: getPaginationRowModel(),
+        initialState: { pagination: { pageSize } },
     });
 
     return (
@@ -90,6 +97,28 @@ function DataGrid<T extends object>({ columns: columnConfigs, data }: DataGridPr
                     ))}
                 </tbody>
             </table>
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 text-sm text-gray-600">
+                <span>
+                    Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} ·{' '}
+                    {table.getFilteredRowModel().rows.length} rows
+                </span>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                        className="px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50"
+                    >
+                        Prev
+                    </button>
+                    <button
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                        className="px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
