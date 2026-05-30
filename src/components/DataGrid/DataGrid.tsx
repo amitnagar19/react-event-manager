@@ -12,6 +12,7 @@ import {
 } from '@tanstack/react-table';
 import type { DataGridProps } from './types.ts';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import ColumnToggle from './ColumnToggle.tsx';
 
 function DataGrid<T extends object>({
     columns: columnConfigs,
@@ -48,6 +49,7 @@ function DataGrid<T extends object>({
 
     return (
         <div className="overflow-x-auto rounded border border-gray-200">
+            <ColumnToggle table={table} />
             <table className="w-full text-sm text-left">
                 <thead className="bg-gray-50 border-b border-gray-200">
                     {table.getHeaderGroups().map((headerGroup) => (
