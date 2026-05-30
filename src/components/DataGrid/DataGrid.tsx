@@ -1,10 +1,18 @@
-import  {useMemo} from 'react';
-import {useReactTable, getCoreRowModel, flexRender, type ColumnDef} from '@tanstack/react-table'
+import {useMemo, useState} from 'react';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    type SortingState,
+    useReactTable
+} from '@tanstack/react-table'
 import type {DataGridProps} from "./types.ts";
+import {ArrowDown, ArrowUp, ArrowUpDown} from 'lucide-react'
 
 
-function DataGrid<T extends object>({ columns: columnConfigs, data }: DataGridProps<T>) {
-
+function DataGrid<T extends object>({columns: columnConfigs, data}: DataGridProps<T>) {
+    const [sorting, setSorting] = useState<SortingState>([])
     const columns = useMemo<ColumnDef<T>[]>(
         () => columnConfigs.map(c => ({
             id: c.accessor,
@@ -14,7 +22,11 @@ function DataGrid<T extends object>({ columns: columnConfigs, data }: DataGridPr
         [columnConfigs]
     )
 
-    const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() })
+    const table = useReactTable({
+        data, columns, getCoreRowModel: getCoreRowModel(), getSortedRowModel: getSortedRowModel(), state: {
+            sorting,
+        }, onSortingChange: setSorting,
+    })
 
     return (
         <div className="overflow-x-auto rounded border border-gray-200">
@@ -23,8 +35,15 @@ function DataGrid<T extends object>({ columns: columnConfigs, data }: DataGridPr
                 {table.getHeaderGroups().map(headerGroup => (
                     <tr key={headerGroup.id}>
                         {headerGroup.headers.map(header => (
-                            <th key={header.id} className="px-4 py-2 font-medium text-gray-700">
+                            <th key={header.id} className="px-4 py-2 font-medium text-gray-700"
+                                onClick={header.column.getToggleSortingHandler()}>
                                 {flexRender(header.column.columnDef.header, header.getContext())}
+                                <span className="ml-1 inline-flex text-gray-400">
+                                    {{
+                                        asc: <ArrowUp size={14}/>,
+                                        desc: <ArrowDown size={14}/>
+                                    }[header.column.getIsSorted() as string] ?? <ArrowUpDown size={14}/>}
+                                </span>
                             </th>
                         ))}
                     </tr>
