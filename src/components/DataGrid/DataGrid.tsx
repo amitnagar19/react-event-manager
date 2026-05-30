@@ -8,7 +8,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     type SortingState,
-    useReactTable
+    useReactTable,
 } from '@tanstack/react-table';
 import type { DataGridProps } from './types.ts';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
@@ -17,6 +17,8 @@ import ColumnToggle from './ColumnToggle.tsx';
 function DataGrid<T extends object>({
     columns: columnConfigs,
     data,
+    loading,
+    error,
     pageSize = 10,
 }: DataGridProps<T>) {
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -46,6 +48,22 @@ function DataGrid<T extends object>({
         getPaginationRowModel: getPaginationRowModel(),
         initialState: { pagination: { pageSize } },
     });
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-48 text-gray-400">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                {error}
+            </div>
+        );
+    }
 
     return (
         <div className="overflow-x-auto rounded border border-gray-200">
@@ -88,15 +106,26 @@ function DataGrid<T extends object>({
                     ))}
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                    {table.getRowModel().rows.map((row) => (
-                        <tr key={row.id} className="hover:bg-gray-50">
-                            {row.getVisibleCells().map((cell) => (
-                                <td key={cell.id} className="px-4 py-2 text-gray-700">
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
+                    {table.getRowModel().rows.length === 0 ? (
+                        <tr>
+                            <td
+                                colSpan={table.getVisibleLeafColumns().length}
+                                className="px-4 py-12 text-center text-gray-400"
+                            >
+                                No results found
+                            </td>
                         </tr>
-                    ))}
+                    ) : (
+                        table.getRowModel().rows.map((row) => (
+                            <tr key={row.id} className="hover:bg-gray-50">
+                                {row.getVisibleCells().map((cell) => (
+                                    <td key={cell.id} className="px-4 py-2 text-gray-700">
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
             <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 text-sm text-gray-600">

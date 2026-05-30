@@ -7,5 +7,7 @@ export interface ColumnConfig<T> {
 export interface DataGridProps<T extends object> {
     columns: ColumnConfig<T>[];
     data: T[];
+    loading?: boolean;
+    error?: string | null;
     pageSize?: number;
 }
