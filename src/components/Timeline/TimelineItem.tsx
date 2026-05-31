@@ -1,3 +1,5 @@
+import type { RefCallback } from 'react';
+
 interface Props {
     title: string;
     description: string;
@@ -5,12 +7,14 @@ interface Props {
     date: string;
     isFocused: boolean;
     onFocus: () => void;
+    itemRef: RefCallback<HTMLDivElement>;
 }
 
-function TimelineItem({ title, description, category, date, isFocused, onFocus }: Props) {
+function TimelineItem({ title, description, category, date, isFocused, onFocus, itemRef }: Props) {
     const time = new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     return (
         <div
+            ref={itemRef}
             tabIndex={-1}
             onFocus={onFocus}
             className={`flex gap-4 focus:outline-none group ${isFocused ? 'outline-none' : ''}`}
