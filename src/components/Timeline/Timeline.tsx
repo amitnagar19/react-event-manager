@@ -12,6 +12,7 @@ const DAY_FORMAT = 'MMMM d, yyyy';
 function Timeline({ events }: Props) {
     const [focusedGroup, setFocusedGroup] = useState(0);
     const [focusedItem, setFocusedItem] = useState(0);
+    const [announcement, setAnnouncement] = useState('');
 
     const groups = useMemo<TimelineGroup[]>(() => {
         const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
@@ -36,6 +37,9 @@ function Timeline({ events }: Props) {
             setFocusedItem(ii);
             const event = groups[gi]?.events[ii];
             if (event) itemRefsMap.current.get(event.id)?.focus();
+            setAnnouncement(
+                `${event.title}, ${groups[gi].label}, item ${ii + 1} of ${groups[gi].events.length}`,
+            );
         },
         [groups],
     );
@@ -71,28 +75,36 @@ function Timeline({ events }: Props) {
     }
     return (
         <div onKeyDown={handleKeyDown} tabIndex={0}>
+            <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+                {announcement}
+            </div>
             {groups.map((group, gi) => (
                 <div key={group.label}>
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 mt-8 first:mt-0">
                         {group.label}
                     </h3>
-                    <div className="border-t border-gray-100 pt-4">
+                    <div
+                        role="list"
+                        aria-label={group.label}
+                        className="border-t border-gray-100 pt-4"
+                    >
                         {group.events.map((event, ii) => (
-                            <TimelineItem
-                                key={event.id}
-                                title={event.title}
-                                description={event.description}
-                                category={event.category}
-                                date={event.date}
-                                isFocused={focusedGroup === gi && focusedItem === ii}
-                                onFocus={() => {
-                                    setFocusedGroup(gi);
-                                    setFocusedItem(ii);
-                                }}
-                                itemRef={(el) => {
-                                    itemRefsMap.current.set(event.id, el);
-                                }}
-                            />
+                            <div key={event.id} role="listitem">
+                                <TimelineItem
+                                    title={event.title}
+                                    description={event.description}
+                                    category={event.category}
+                                    date={event.date}
+                                    isFocused={focusedGroup === gi && focusedItem === ii}
+                                    onFocus={() => {
+                                        setFocusedGroup(gi);
+                                        setFocusedItem(ii);
+                                    }}
+                                    itemRef={(el) => {
+                                        itemRefsMap.current.set(event.id, el);
+                                    }}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>
