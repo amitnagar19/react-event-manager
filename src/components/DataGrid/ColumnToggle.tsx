@@ -33,7 +33,7 @@ function ColumnToggle<T>({ table }: Props<T>) {
                 <ChevronDown size={14} className="inline ml-1" />
             </button>
             {open && (
-                <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg z-10 p-2">
+                <div className="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg z-50 p-2">
                     <div className="px-2 py-1 text-xs text-gray-400 font-medium uppercase tracking-wide border-b border-gray-100 mb-1">
                         Show / Hide
                     </div>
