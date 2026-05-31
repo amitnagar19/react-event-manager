@@ -11,7 +11,11 @@ import Tabs from './components/Tabs.tsx';
 
 const columns: ColumnConfig<Event>[] = [
     { accessor: 'title', label: 'Title' },
-    { accessor: 'date', label: 'Date' },
+    {
+        accessor: 'date',
+        label: 'Date',
+        format: (v) => new Date(v as string).toLocaleString(),
+    },
     { accessor: 'category', label: 'Category' },
     { accessor: 'description', label: 'Description' },
 ];

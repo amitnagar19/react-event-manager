@@ -2,6 +2,7 @@ export interface ColumnConfig<T> {
     accessor: keyof T & string;
     label: string;
     hidden?: boolean;
+    format?: (value: unknown) => string;
 }
 
 export interface DataGridProps<T extends object> {

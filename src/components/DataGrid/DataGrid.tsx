@@ -8,7 +8,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     type SortingState,
-    useReactTable
+    useReactTable,
 } from '@tanstack/react-table';
 import type { DataGridProps } from './types.ts';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
@@ -29,6 +29,9 @@ function DataGrid<T extends object>({
                 id: c.accessor,
                 accessorKey: c.accessor,
                 header: c.label,
+                ...(c.format
+                    ? { cell: ({ getValue }: { getValue: () => unknown }) => c.format!(getValue()) }
+                    : {}),
             })),
         [columnConfigs],
     );
