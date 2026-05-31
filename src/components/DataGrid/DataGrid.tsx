@@ -11,8 +11,9 @@ import {
     useReactTable
 } from '@tanstack/react-table';
 import type { DataGridProps } from './types.ts';
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import ColumnToggle from './ColumnToggle.tsx';
+import DataGridPagination from './DataGridPagination.tsx';
 
 function DataGrid<T extends object>({
     columns: columnConfigs,
@@ -131,28 +132,7 @@ function DataGrid<T extends object>({
                     )}
                 </tbody>
             </table>
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 text-sm text-gray-600">
-                <span>
-                    Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} ·{' '}
-                    {table.getFilteredRowModel().rows.length} rows
-                </span>
-                <div className="flex gap-2">
-                    <button
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                        className="inline-flex items-center gap-1 px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 cursor-pointer"
-                    >
-                        <ChevronLeft size={14} /> Prev
-                    </button>
-                    <button
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                        className="inline-flex items-center gap-1 px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 cursor-pointer"
-                    >
-                        Next <ChevronRight size={14} />
-                    </button>
-                </div>
-            </div>
+            <DataGridPagination table={table} />
         </div>
     );
 }
