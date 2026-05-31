@@ -8,10 +8,10 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     type SortingState,
-    useReactTable,
+    useReactTable
 } from '@tanstack/react-table';
 import type { DataGridProps } from './types.ts';
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import ColumnToggle from './ColumnToggle.tsx';
 
 function DataGrid<T extends object>({
@@ -140,16 +140,16 @@ function DataGrid<T extends object>({
                     <button
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
-                        className="px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 cursor-pointer"
                     >
-                        Prev
+                        <ChevronLeft size={14} /> Prev
                     </button>
                     <button
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
-                        className="px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 cursor-pointer"
                     >
-                        Next
+                        Next <ChevronRight size={14} />
                     </button>
                 </div>
             </div>

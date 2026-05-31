@@ -8,6 +8,7 @@ import type { EventFormData } from './components/EventForm/types.ts';
 import { useEventStore } from './store/useEventStore.ts';
 import Timeline from './components/Timeline/Timeline.tsx';
 import Tabs from './components/Tabs.tsx';
+import { Plus } from 'lucide-react';
 
 const columns: ColumnConfig<Event>[] = [
     { accessor: 'title', label: 'Title' },
@@ -43,9 +44,10 @@ function App() {
                 <h1 className="text-xl font-semibold text-gray-800">Event Manager</h1>
                 <button
                     onClick={() => setModalOpen(true)}
-                    className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+                    className="inline-flex items-center gap-1 px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
                 >
-                    + New Event
+                    <Plus size={16} />
+                    New Event
                 </button>
             </header>
             <Tabs tabs={TABS} active={activeTab} onChange={(v) => setActiveTab(v as Tab)} />
