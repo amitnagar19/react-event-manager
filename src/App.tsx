@@ -7,6 +7,7 @@ import Modal from './components/Modal.tsx';
 import type { EventFormData } from './components/EventForm/types.ts';
 import { useEventStore } from './store/useEventStore.ts';
 import Timeline from './components/Timeline/Timeline.tsx';
+import Tabs from './components/Tabs.tsx';
 
 const columns: ColumnConfig<Event>[] = [
     { accessor: 'title', label: 'Title' },
@@ -15,8 +16,15 @@ const columns: ColumnConfig<Event>[] = [
     { accessor: 'description', label: 'Description' },
 ];
 
+const TABS = [
+    { value: 'grid', label: 'Data Grid' },
+    { value: 'timeline', label: 'Timeline' },
+] as const;
+type Tab = (typeof TABS)[number]['value'];
+
 function App() {
     const [modalOpen, setModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState<Tab>('grid');
     const { events, addEvent } = useEventStore();
 
     const handleClose = useCallback(() => setModalOpen(false), []);
@@ -36,10 +44,12 @@ function App() {
                     + New Event
                 </button>
             </header>
-
+            <Tabs tabs={TABS} active={activeTab} onChange={(v) => setActiveTab(v as Tab)} />
             <main className="p-6 max-w-6xl mx-auto">
-                <DataGrid columns={columns} data={events} loading={false} error={null} />
-                <Timeline events={events} />
+                {activeTab === 'grid' && (
+                    <DataGrid columns={columns} data={events} loading={false} error={null} />
+                )}
+                {activeTab === 'timeline' && <Timeline events={events} />}
             </main>
 
             <Modal open={modalOpen} onClose={handleClose} title="New Event">
