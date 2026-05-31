@@ -73,7 +73,7 @@ function DataGrid<T extends object>({
         <div className="flex flex-col gap-3 border border-gray-200 rounded p-3 bg-white">
             <ColumnToggle table={table} />
 
-            <div className="overflow-x-auto overflow-y-auto max-h-[600px] rounded border border-gray-200">
+            <div className="overflow-x-auto overflow-y-auto max-h-150 rounded border border-gray-200">
                 <table className="w-full text-sm text-left">
                     <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                         {table.getHeaderGroups().map((headerGroup) => (
