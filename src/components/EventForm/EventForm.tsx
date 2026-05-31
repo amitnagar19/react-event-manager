@@ -57,7 +57,17 @@ function EventForm({ onSave, onCancel, initialData }: Props) {
                 <input
                     id="date"
                     type="date"
-                    {...register('date', { required: 'Date is required' })}
+                    min={new Date().toISOString().split('T')[0]}
+                    {...register('date', {
+                        validate: (v) => {
+                            if (!v) return 'Date is required';
+                            const date = new Date(v);
+                            if (isNaN(date.getTime())) return 'Invalid date';
+                            if (date < new Date(new Date().toDateString()))
+                                return 'Date cannot be in the past';
+                            return true;
+                        },
+                    })}
                     className={`px-3 py-2 border rounded text-sm focus:outline-none focus:border-blue-400 ${errors.date ? 'border-red-400' : 'border-gray-300'}`}
                 />
                 {errors.date && <p className="text-xs text-red-500">{errors.date.message}</p>}
@@ -97,13 +107,13 @@ function EventForm({ onSave, onCancel, initialData }: Props) {
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                    className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 cursor-pointer"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
-                    className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
                 >
                     Save
                 </button>
