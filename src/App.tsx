@@ -40,7 +40,7 @@ function App() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
                 <h1 className="text-xl font-semibold text-gray-800">Event Manager</h1>
                 <button
                     onClick={() => setModalOpen(true)}
