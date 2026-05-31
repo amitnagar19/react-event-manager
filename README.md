@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# React Event Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A demo app showcasing three reusable React components: DataGrid, Timeline, and EventForm.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+  ```bash
+  npm install
+  npm run dev
+  ```
 
-## React Compiler
+## Components
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### DataGrid
 
-## Expanding the ESLint configuration
+Built on TanStack Table v8 (headless) — all markup and styling is custom. Supports client-side sorting, column
+filtering, pagination with configurable page size, and column visibility toggle. Columns are
+configured via a `ColumnConfig` interface that abstracts TanStack internals from consumers.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Timeline
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Custom-built vertical timeline grouping events by day. Day grouping was chosen over month (too many events per group) or
+hour (too sparse) — 200 events over ~60 days produces readable chunks of 3-5 events per
+group.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Keyboard navigable: Left/Right moves between day groups, Up/Down moves between items within a group. Uses `useRef` for
+stale-closure-free keyboard handling and callback refs for DOM focus management. Screen
+reader announcements via `aria-live` region.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### EventForm
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Controlled form using React Hook Form. Validates required title and date fields. Focuses first invalid field on submit (
+RHF default). Opens in a modal with cancel/save flow and an `aria-live` success region.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Date validation prevents past dates — events are always scheduled in the future.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## State & Data
+
+**Zustand** manages shared event state. All three components consume the same `useEventStore` — new events added via the
+form appear in both DataGrid and Timeline without prop drilling.
+
+**Mock data** is generated with `@faker-js/faker` (dev dependency) — 200 realistic events spread across two months.
+Faker is dev-only since mock data is never used in production.
+
+## Tech Stack
+
+| Concern | Library           |
+  |---------|-------------------|
+| Table   | TanStack Table v8 |
+| Form    | React Hook Form   |
+| State   | Zustand           |
+| Dates   | date-fns          |
+| Icons   | Lucide React      |
+| Styling | Tailwind CSS      |
+
+## Project Structure
+
+  ```
+  src/
+  ├── components/
+  │   ├── DataGrid/       # DataGrid, ColumnToggle, DataGridPagination, types
+  │   ├── Timeline/       # Timeline, TimelineItem, types
+  │   └── EventForm/      # EventForm, types
+  ├── store/
+  │   └── useEventStore.ts
+  └── data/
+      └── mockEvents.ts
+  ```
+
+## Notes
+
+- App runs on `http://localhost:5173` (Vite default)
+- No backend — all data is mock and lives in memory, resets on page refresh
+- No unit tests — per task requirements
