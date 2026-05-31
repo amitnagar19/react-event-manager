@@ -6,6 +6,7 @@ import { useCallback, useState } from 'react';
 import Modal from './components/Modal.tsx';
 import type { EventFormData } from './components/EventForm/types.ts';
 import { useEventStore } from './store/useEventStore.ts';
+import Timeline from './components/Timeline/Timeline.tsx';
 
 const columns: ColumnConfig<Event>[] = [
     { accessor: 'title', label: 'Title' },
@@ -38,6 +39,7 @@ function App() {
 
             <main className="p-6 max-w-6xl mx-auto">
                 <DataGrid columns={columns} data={events} loading={false} error={null} />
+                <Timeline events={events} />
             </main>
 
             <Modal open={modalOpen} onClose={handleClose} title="New Event">
