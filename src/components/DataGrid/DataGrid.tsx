@@ -115,6 +115,16 @@ function DataGrid<T extends object>({
                         ))}
                     </thead>
                     <tbody className="divide-y divide-gray-100">
+                        {table.getVisibleLeafColumns().length === 0 && (
+                            <tr>
+                                <td
+                                    colSpan={table.getVisibleLeafColumns().length}
+                                    className="px-4 py-12 text-center text-gray-400"
+                                >
+                                    No columns selected. Choose at least one column to display data.
+                                </td>
+                            </tr>
+                        )}
                         {table.getRowModel().rows.length === 0 ? (
                             <tr>
                                 <td
